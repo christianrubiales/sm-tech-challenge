@@ -1,4 +1,4 @@
-package com.christianrubiales.smchallenge.model;
+package com.christianrubiales.smchallenge.service.model;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
@@ -6,21 +6,21 @@ import jakarta.validation.constraints.NotNull;
 
 import java.util.List;
 
-public record Mail(
+public record ResendMail(
 
         @Email
-        @NotEmpty(message = "Sender email address is required.")
+        @NotEmpty(message = "Sender address is required.")
         String from,
 
-        @NotEmpty(message = "There should be at least one recipient.")
-        List<@Email String> recipients,
+        List<@Email String> to,
 
         List<@Email String> cc,
 
         List<@Email String> bcc,
 
-        @NotNull
+        @NotEmpty(message = "Subject is required.")
         String subject,
 
-        String body
+        @NotNull
+        String text
 ) {}
