@@ -5,6 +5,10 @@ import com.christianrubiales.smchallenge.service.MailService;
 import com.christianrubiales.smchallenge.service.MailServiceException;
 import org.springframework.stereotype.Service;
 
+/**
+ * Implementation of MailService that will always fail.
+ * Used to check failover to another MailService.
+ */
 @Service
 public class MockFailingMailServiceImpl implements MailService {
 
