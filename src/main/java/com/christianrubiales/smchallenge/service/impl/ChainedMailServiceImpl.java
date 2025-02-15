@@ -34,7 +34,7 @@ public class ChainedMailServiceImpl implements MailService {
 
     @Override
     public void sendMail(Mail mail) {
-        List<MailService> services = List.of(mailtrapService, resendService);
+        List<MailService> services = List.of(mailtrapService);
 
         MailServiceException exception = null;
         for (MailService service : services) {
@@ -42,12 +42,19 @@ public class ChainedMailServiceImpl implements MailService {
                 exception = null;
                 logger.info("Trying to send mail using {}", service.getClass().getName());
                 service.sendMail(mail);
+
             } catch (MailServiceException e) {
                 logger.info("Mail sending failed using {}", service.getClass().getName(), e);
                 exception = e;
             }
+
+            // the current mail service succeeded, no need to failover to the next service in the chain
+            if (exception == null) {
+                break;
+            }
         }
 
+        // none of the chained services succeeded
         if (exception != null) {
             throw exception;
         }
