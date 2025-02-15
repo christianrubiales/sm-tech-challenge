@@ -37,8 +37,7 @@ public class ResendServiceImpl implements MailService {
         try (HttpClient client = HttpClient.newHttpClient()) {
 
             // build JSON payload
-            ResendMail resendMail =
-                    new ResendMail(mail.from(), mail.recipients(), mail.cc(), mail.bcc(), mail.subject(), mail.body());
+            ResendMail resendMail = new ResendMail(mail.from(), mail.recipients(), mail.cc(), mail.bcc(), mail.subject(), mail.body());
             String payload = objectMapper.writeValueAsString(resendMail);
             logger.debug("Resend API payload: {}", payload);
 

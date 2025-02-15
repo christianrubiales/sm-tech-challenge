@@ -1,6 +1,5 @@
 package com.christianrubiales.smchallenge.service.impl;
 
-import com.christianrubiales.smchallenge.api.MailController;
 import com.christianrubiales.smchallenge.model.Mail;
 import com.christianrubiales.smchallenge.service.MailService;
 import com.christianrubiales.smchallenge.service.MailServiceException;
@@ -23,21 +22,19 @@ public class ChainedMailServiceImpl implements MailService {
 
     private static final Logger logger = LoggerFactory.getLogger(ChainedMailServiceImpl.class);
 
-    private final MockFailingMailServiceImpl failingMailService;
+    private final MailtrapServiceImpl mailtrapService;
 
     private final ResendServiceImpl resendService;
 
     @Autowired
-    public ChainedMailServiceImpl(
-            MockFailingMailServiceImpl failingMailService,
-            ResendServiceImpl resendService) {
-        this.failingMailService = failingMailService;
+    public ChainedMailServiceImpl(MailtrapServiceImpl mailtrapService, ResendServiceImpl resendService) {
+        this.mailtrapService = mailtrapService;
         this.resendService = resendService;
     }
 
     @Override
     public void sendMail(Mail mail) {
-        List<MailService> services = List.of(failingMailService, resendService);
+        List<MailService> services = List.of(mailtrapService, resendService);
 
         MailServiceException exception = null;
         for (MailService service : services) {
