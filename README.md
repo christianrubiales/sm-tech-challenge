@@ -81,3 +81,73 @@ References:
 https://resend.com/docs/api-reference/introduction
 
 https://resend.com/docs/api-reference/emails/send-email
+
+## Example Tests
+
+1. No content in `body`, but `body` content is required by both `Mailtrap` and `Resend` -> Error:
+
+```json
+{
+    "from": "onboarding@resend.dev",
+    "recipients": ["christianrubiales@yahoo.com"],
+    "cc": [],
+    "bcc": [],
+    "subject": "",
+    "body": ""
+}
+```
+
+2. Empty `subject`, required by `Mailtrap` but ok with `Resend` -> 
+will fail with `Mailtrap` and will failover to `Resend`, will be sent by `Resend`:
+
+```json
+{
+    "from": "onboarding@resend.dev",
+    "recipients": ["christianrubiales@yahoo.com"],
+    "cc": [],
+    "bcc": [],
+    "subject": "",
+    "body": "Test"
+}
+```
+
+3. All required fields set -> Mail will be delivered by `Mailtrap`
+
+```json
+{
+    "from": "hello@demomailtrap.com",
+    "recipients": ["christianrubiales@yahoo.com"],
+    "cc": [],
+    "bcc": [],
+    "subject": "Test Subject",
+    "body": "Test"
+}
+```
+
+4. All required fields set, using `Resend` sender address -> 
+Will fail with `Mailtrap`, mail will be delivered by `Resend`
+
+```json
+{
+    "from": "onboarding@resend.dev",
+    "recipients": ["christianrubiales@yahoo.com"],
+    "cc": [],
+    "bcc": [],
+    "subject": "Test Subject",
+    "body": "Test"
+}
+```
+
+5. `Mailtrap` will only accept a single recipient in `recipients`, `cc`, and `bcc` ->
+will encounter an error when using multiple recipients with `Mailtrap` but alright with `Resend`:
+
+```json
+{
+    "from": "onboarding@resend.dev",
+    "recipients": ["christianrubiales@yahoo.com","hello0@resend.dev"],
+    "cc": ["hello1@resend.dev","hello2@resend.dev"],
+    "bcc": ["hello3@resend.dev","hello4@resend.dev"],
+    "subject": "Test Subject",
+    "body": "Test"
+}
+```
