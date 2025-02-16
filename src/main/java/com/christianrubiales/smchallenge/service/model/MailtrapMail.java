@@ -1,27 +1,27 @@
 package com.christianrubiales.smchallenge.service.model;
 
-import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
 import java.util.List;
 
 public record MailtrapMail(
 
-        @Email
-        @NotEmpty(message = "Sender address is required.")
+        @NotNull(message = "Sender email address is required.")
         MailtrapAddress from,
 
-        List<@Email MailtrapAddress> to,
+        @Size(min = 1, message = "There should be at least one recipient")
+        List<MailtrapAddress> to,
 
-        List<@Email MailtrapAddress> cc,
+        List<MailtrapAddress> cc,
 
-        List<@Email MailtrapAddress> bcc,
+        List<MailtrapAddress> bcc,
 
-        @NotEmpty(message = "Subject is required.")
+        @NotEmpty(message = "Subject is required and should not be empty.")
         String subject,
 
-        @NotNull
+        @NotEmpty(message = "Body is required and should not be empty")
         String text
 ) {}
 

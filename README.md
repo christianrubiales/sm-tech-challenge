@@ -53,9 +53,10 @@ This implementation uses the `Mailtrap` and `Resend` APIs.
 
 - Allowed sender is only `*@demomailtrap.com`
 - Recipient can only be `christianrubiales@yahoo.com` in `recipients`, `cc` and `bcc`
-- Can't contain the same recipient in `cc` and `bcc`
+- Can't contain the same recipient in `recipients`, `cc` and `bcc`
 - This limitation of `Mailtrap` can be used to force errors and the failover to `Resend API`
-- `recipients` is required
+- `recipients` is required and must contain at least one address
+- `cc` and `bcc` are not required
 - `subject` is required and must not be blank
 - `body` is required and must not be blank
 
