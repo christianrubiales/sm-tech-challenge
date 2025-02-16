@@ -11,7 +11,7 @@ public record MailtrapMail(
         @NotNull(message = "Sender email address is required.")
         MailtrapAddress from,
 
-        @Size(min = 1, message = "There should be at least one recipient")
+        @Size(min = 1, message = "At least one recipient is required.")
         List<MailtrapAddress> to,
 
         List<MailtrapAddress> cc,

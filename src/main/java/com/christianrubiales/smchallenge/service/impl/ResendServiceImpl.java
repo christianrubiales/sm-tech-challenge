@@ -4,7 +4,10 @@ import com.christianrubiales.smchallenge.model.Mail;
 import com.christianrubiales.smchallenge.service.MailService;
 import com.christianrubiales.smchallenge.service.MailServiceException;
 import com.christianrubiales.smchallenge.service.model.ResendMail;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.Validator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -15,6 +18,7 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.Set;
 
 /**
  * Implementation using the Resend API.
@@ -30,7 +34,14 @@ public class ResendServiceImpl implements MailService {
     @Value("${resend.apiToken}")
     private String apiToken;
 
-    private final ObjectMapper objectMapper = new ObjectMapper();
+    private final ObjectMapper objectMapper;
+
+    private final Validator validator;
+
+    public ResendServiceImpl(ObjectMapper objectMapper, Validator validator) {
+        this.objectMapper = objectMapper;
+        this.validator = validator;
+    }
 
     @Override
     public void sendMail(Mail mail) {
@@ -38,7 +49,7 @@ public class ResendServiceImpl implements MailService {
 
             // build JSON payload
             ResendMail resendMail = new ResendMail(mail.from(), mail.recipients(), mail.cc(), mail.bcc(), mail.subject(), mail.body());
-            String payload = objectMapper.writeValueAsString(resendMail);
+            String payload = this.buildJsonPayload(resendMail);
             logger.debug("Resend API payload: {}", payload);
 
             // POST to the Resend API
@@ -63,5 +74,14 @@ public class ResendServiceImpl implements MailService {
         } catch (Exception e) {
             throw new MailServiceException(e);
         }
+    }
+
+    protected String buildJsonPayload(ResendMail resendMail) throws JsonProcessingException {
+        Set<ConstraintViolation<ResendMail>> violations  = validator.validate(resendMail);
+        if (!violations.isEmpty()) {
+            logger.info("ResendMail validator violations: {}", violations);
+            throw new MailServiceException("ResendMail validator violations: " + violations);
+        }
+        return objectMapper.writeValueAsString(resendMail);
     }
 }

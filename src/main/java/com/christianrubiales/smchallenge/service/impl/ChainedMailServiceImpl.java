@@ -34,7 +34,7 @@ public class ChainedMailServiceImpl implements MailService {
 
     @Override
     public void sendMail(Mail mail) {
-        List<MailService> services = List.of(mailtrapService);
+        List<MailService> services = List.of(resendService);
 
         MailServiceException exception = null;
         for (MailService service : services) {
