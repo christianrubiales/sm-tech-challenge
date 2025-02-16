@@ -44,7 +44,7 @@ POST body JSON example:
 - Email addresses must be in valid format
 - `cc` and `bcc` are not required
 - `subject` is also not required
-- `body` is also not required
+- `body` content is required
 
 
 This implementation uses the `Mailtrap` and `Resend` APIs.
