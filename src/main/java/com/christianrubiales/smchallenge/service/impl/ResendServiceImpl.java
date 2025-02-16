@@ -45,7 +45,7 @@ public class ResendServiceImpl implements MailService {
 
     @Override
     public HttpResponse<String> sendMail(Mail mail) {
-        try (HttpClient client = HttpClient.newHttpClient()) {
+        try (HttpClient client = this.getHttpClient()) {
 
             // build JSON payload
             ResendMail resendMail = new ResendMail(mail.from(), mail.recipients(), mail.cc(), mail.bcc(), mail.subject(), mail.body());
@@ -53,13 +53,7 @@ public class ResendServiceImpl implements MailService {
             logger.debug("Resend API payload: {}", payload);
 
             // POST to the Resend API
-            HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create(apiUrl))
-                    .header("Authorization", "Bearer " + apiToken)
-                    .header("Content-Type", "application/json")
-                    .POST(HttpRequest.BodyPublishers.ofString(payload))
-                    .build();
-
+            HttpRequest request = this.buildHttpRequest(payload);
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
             logger.info("Resend API Response Code: {}", response.statusCode());
             logger.info("Resend API Response Body: {}", response.body());
@@ -76,6 +70,19 @@ public class ResendServiceImpl implements MailService {
         } catch (Exception e) {
             throw new MailServiceException(e);
         }
+    }
+
+    protected HttpRequest buildHttpRequest(String payload) {
+        return HttpRequest.newBuilder()
+                .uri(URI.create(apiUrl))
+                .header("Authorization", "Bearer " + apiToken)
+                .header("Content-Type", "application/json")
+                .POST(HttpRequest.BodyPublishers.ofString(payload))
+                .build();
+    }
+
+    protected HttpClient getHttpClient() {
+        return HttpClient.newHttpClient();
     }
 
     protected String buildJsonPayload(ResendMail resendMail) throws JsonProcessingException {
