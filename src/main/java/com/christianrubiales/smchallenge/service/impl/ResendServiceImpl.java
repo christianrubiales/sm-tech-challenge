@@ -44,7 +44,7 @@ public class ResendServiceImpl implements MailService {
     }
 
     @Override
-    public void sendMail(Mail mail) {
+    public HttpResponse<String> sendMail(Mail mail) {
         try (HttpClient client = HttpClient.newHttpClient()) {
 
             // build JSON payload
@@ -67,6 +67,8 @@ public class ResendServiceImpl implements MailService {
             if (response.statusCode() != HttpStatus.OK.value()) {
                 throw new MailServiceException(response.body());
             }
+
+            return response;
         } catch (InterruptedException ie) {
             // Suggested by CodeScan
             Thread.currentThread().interrupt();

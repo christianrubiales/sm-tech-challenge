@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
+import java.net.http.HttpResponse;
 import java.util.List;
 
 /**
@@ -33,15 +34,16 @@ public class ChainedMailServiceImpl implements MailService {
     }
 
     @Override
-    public void sendMail(Mail mail) {
+    public HttpResponse<String> sendMail(Mail mail) {
         List<MailService> services = List.of(mailtrapService, resendService);
 
         MailServiceException exception = null;
+        HttpResponse<String> response = null;
         for (MailService service : services) {
             try {
                 exception = null;
                 logger.info("Trying to send mail using {}", service.getClass().getName());
-                service.sendMail(mail);
+                response = service.sendMail(mail);
 
             } catch (MailServiceException e) {
                 logger.info("Mail sending failed using {}", service.getClass().getName(), e);
@@ -58,5 +60,6 @@ public class ChainedMailServiceImpl implements MailService {
         if (exception != null) {
             throw exception;
         }
+        return response;
     }
 }

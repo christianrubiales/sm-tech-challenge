@@ -9,6 +9,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validator;
+import jakarta.validation.constraints.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,14 +42,14 @@ public class MailtrapServiceImpl implements MailService {
     private final Validator validator;
 
     @Autowired
-    public MailtrapServiceImpl(ObjectMapper objectMapper, Validator validator) {
+    public MailtrapServiceImpl(@NotNull ObjectMapper objectMapper, @NotNull Validator validator) {
         this.objectMapper = objectMapper;
         this.validator = validator;
     }
 
     @Override
-    public void sendMail(Mail mail) {
-        try (HttpClient client = HttpClient.newHttpClient()) {
+    public HttpResponse<String> sendMail(Mail mail) {
+        try (HttpClient client = this.getHttpClient()) {
 
             String payload = this.buildJsonPayload(this.convert(mail));
             logger.debug("Mailtrap API payload: {}", payload);
@@ -62,6 +63,8 @@ public class MailtrapServiceImpl implements MailService {
             if (response.statusCode() != HttpStatus.OK.value()) {
                 throw new MailServiceException(response.body());
             }
+
+            return response;
         } catch (InterruptedException ie) {
             // Suggested by CodeScan
             Thread.currentThread().interrupt();
@@ -69,6 +72,10 @@ public class MailtrapServiceImpl implements MailService {
         } catch (Exception e) {
             throw new MailServiceException(e);
         }
+    }
+
+    protected HttpClient getHttpClient() {
+        return HttpClient.newHttpClient();
     }
 
     protected MailtrapMail convert(Mail mail) {
