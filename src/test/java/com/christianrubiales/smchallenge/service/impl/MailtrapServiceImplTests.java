@@ -3,6 +3,10 @@ package com.christianrubiales.smchallenge.service.impl;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+import static com.christianrubiales.smchallenge.TestConstants.BODY;
+import static com.christianrubiales.smchallenge.TestConstants.EMAIL;
+import static com.christianrubiales.smchallenge.TestConstants.SUBJECT;
+
 import com.christianrubiales.smchallenge.model.Mail;
 import com.christianrubiales.smchallenge.service.MailServiceException;
 import com.christianrubiales.smchallenge.service.model.MailtrapAddress;
@@ -38,12 +42,6 @@ class MailtrapServiceImplTests {
 
     @InjectMocks
     private MailtrapServiceImpl service;
-
-    private static final String EMAIL = "a@b.c";
-
-    private static final String SUBJECT = "subject";
-
-    private static final String BODY = "body";
 
     @BeforeEach
     void setup() {

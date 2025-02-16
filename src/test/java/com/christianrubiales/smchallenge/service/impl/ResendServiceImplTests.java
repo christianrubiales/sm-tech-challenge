@@ -28,6 +28,10 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import static com.christianrubiales.smchallenge.TestConstants.BODY;
+import static com.christianrubiales.smchallenge.TestConstants.EMAIL;
+import static com.christianrubiales.smchallenge.TestConstants.SUBJECT;
+
 @ExtendWith(MockitoExtension.class)
 class ResendServiceImplTests {
 
@@ -39,12 +43,6 @@ class ResendServiceImplTests {
 
     @InjectMocks
     private ResendServiceImpl service;
-
-    private static final String EMAIL = "a@b.c";
-
-    private static final String SUBJECT = "subject";
-
-    private static final String BODY = "body";
 
     @BeforeEach
     void setup() {
