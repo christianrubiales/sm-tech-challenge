@@ -35,3 +35,4 @@ build/
 IGNORE
 /ignorefiles/
 src/test/java/ignore/
+app.log
