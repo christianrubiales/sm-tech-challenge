@@ -14,7 +14,7 @@ RESEND_API_TOKEN=
 2) Run using maven:
 
 ```
-mvn spring-boot:run
+mvn clean spring-boot:run
 ```
 
 ## Testing
