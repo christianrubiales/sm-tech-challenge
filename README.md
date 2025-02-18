@@ -151,3 +151,15 @@ will encounter an error when using multiple recipients with `Mailtrap` but alrig
     "body": "Test"
 }
 ```
+
+## Monitoring
+
+This uses Spring Boot Actuator but only the Prometheus endpoint is enabled:
+
+http://170.64.251.90:8080/actuator/prometheus
+
+In the deployment there are dockerized instances of Prometheus and Grafana:
+
+Prometheus http://170.64.251.90:9090
+
+Grafana http://170.64.251.90:3001/
