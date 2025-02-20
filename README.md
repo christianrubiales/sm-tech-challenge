@@ -163,3 +163,7 @@ In the deployment there are dockerized instances of Prometheus and Grafana:
 Prometheus http://170.64.251.90:9090
 
 Grafana http://170.64.251.90:3001/
+
+There is also an HTTP ping endpoint that DigitalOcean uses for checking and alerting:
+
+http://170.64.251.90:8080
