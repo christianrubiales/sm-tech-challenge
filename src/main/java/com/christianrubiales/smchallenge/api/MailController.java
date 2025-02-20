@@ -32,20 +32,12 @@ public class MailController {
 
     @PostMapping("/mail")
     public ResponseEntity<String> sendMail(@Valid @RequestBody Mail mail) {
-        logger.info("sendMail Request from {}: {}", this.getUserIP(this.request), mail);
+        logger.info("sendMail Request from {}: {}", ControllerUtils.getUserIP(this.request), mail);
 
         mailService.sendMail(mail);
 
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body("Mail sent");
-    }
-
-    protected String getUserIP(HttpServletRequest request) {
-        String ipAddress = request.getHeader("X-Forwarded-For");
-        if (ipAddress == null || ipAddress.isEmpty() || "unknown".equalsIgnoreCase(ipAddress)) {
-            ipAddress = request.getRemoteAddr();
-        }
-        return ipAddress;
     }
 }
